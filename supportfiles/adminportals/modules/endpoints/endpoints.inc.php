@@ -29,61 +29,13 @@
 	$currentPage = (isset($_GET['currentPage'])) ? $_GET['currentPage'] : 1;
 	
 	$associationList = $ipskISEDB->getEndPointAssociations();
+    $pageEnd = $associationList['count'];
 		
 	if($associationList){
 		if($associationList['count'] > 0){
-			$pageSizes = Array(25, 50, 75, 100);
+            $pageData['endpointAssociationList'] .= '<table id="endpoint-table" class="table table-hover"><thead><tr><th scope="col">MAC Address</th><th scope="col">iPSK Endpoint Grouping</th><th scope="col">Expiration Date</th><th>Full Name</th><th>Email</th><th data-orderable="false" scope="col">View</th><th data-orderable="false" scope="col">Actions</th></tr></thead><tbody>';
 
-			foreach($pageSizes as $entry){
-				if($entry == $pageSize){
-					$currentPageSizeSelection .= '<option value="'.$entry.'" selected>'.$entry.'</option>';
-				}else{
-					$currentPageSizeSelection .= '<option value="'.$entry.'">'.$entry.'</option>';
-				}
-			}
-						
-			$totalPages = ceil($associationList['count'] / $pageSize);
-			
-			if($currentPage > $totalPages){
-				$currentPage = $totalPages;
-			}
-				
-			$nextPage = $currentPage + 1;
-			
-			if($currentPage == 0 || $currentPage == 1){
-				$currentPage = 1;
-				
-				$pageStart = 0;
-				$pageEnd = $pageStart + $pageSize;
-				
-				if($pageEnd > $associationList['count']){
-					$pageEnd = $associationList['count'];
-				}
-				
-			}else{
-				$pageStart = ($currentPage - 1) * $pageSize;
-				$pageEnd = $pageStart + $pageSize;
-				
-				$previousPage = $currentPage - 1;
-				
-				$pageData['pageinationOutput'] .= '<a class="action-pageicons mx-1" module="endpoints" page="1" href="#"><span data-feather="chevrons-left"></span></a>';
-				$pageData['pageinationOutput'] .= '<a class="action-pageicons mx-1" module="endpoints" page="'.$previousPage.'" href="#"><span data-feather="chevron-left"></span></a>';		
-				
-				if($pageEnd > $associationList['count']){
-					$pageEnd = $associationList['count'];
-				}
-			}
-			
-			$pageData['pageinationOutput'] .= "<strong>".$currentPage."</strong>";
-			
-			if($currentPage != $totalPages && $totalPages != 0){
-				$pageData['pageinationOutput'] .= '<a class="action-pageicons mx-1" module="endpoints" page="'.$nextPage.'" href="#"><span data-feather="chevron-right"></span></a>';
-				$pageData['pageinationOutput'] .= '<a class="action-pageicons mx-1" module="endpoints" page="'.$totalPages.'" href="#"><span data-feather="chevrons-right"></span></a>';
-			}
-			
-			$pageData['endpointAssociationList'] .= '<table class="table table-hover"><thead><tr><th scope="col">MAC Address</th><th scope="col">iPSK Endpoint Grouping</th><th scope="col">Expiration Date</th><th scope="col">View</th><th scope="col">Actions</th></tr></thead><tbody>';
-			
-			for($idxId = $pageStart; $idxId < $pageEnd; $idxId++) {
+			for($idxId = 0; $idxId < $pageEnd; $idxId++) {
 							
 				if($associationList[$idxId]['accountEnabled'] == 1){
 					if($associationList[$idxId]['expirationDate'] == 0){
@@ -101,6 +53,8 @@
 				$pageData['endpointAssociationList'] .= '<td>'.$associationList[$idxId]['macAddress'].'</td>';
 				$pageData['endpointAssociationList'] .= '<td>'.$associationList[$idxId]['groupName'].'</td>';
 				$pageData['endpointAssociationList'] .= '<td>'.$expiration.'</td>';
+                $pageData['endpointAssociationList'] .= '<td>'.$associationList[$idxId]['fullName'].'</td>';
+                $pageData['endpointAssociationList'] .= '<td>'.$associationList[$idxId]['email'].'</td>';
 				$pageData['endpointAssociationList'] .= '<td><a class="epg-tableicons" module="endpoints" sub-module="view" row-id="'.$associationList[$idxId]['id'].'" href="#"><span data-feather="zoom-in"></span></a></td>';
 				
 				$actionRowData .= '<a class="dropdown-item action-tableicons" module="endpoints" sub-module="suspend" row-id="'.$associationList[$idxId]['id'].'" href="#">Suspend</a>';
@@ -146,43 +100,9 @@
 <div class="row">
 	<div class="col"><hr></div>
 </div>
-<div class="row">
-	<div class="col-4">
-		<label class="font-weight-bold" for="pageSize">Items per Page:</label>
-		<select id="pageSize" module="endpoints"><?php print $currentPageSizeSelection;?></select>
-	</div>
-	<div class="col text-center"><strong>Total Items: (<?php print $associationList['count'];?>)  Total Pages: <?php print $totalPages;?></strong></div>
-	<div class="col-4 text-right">
-		<?php print $pageData['pageinationOutput'];?>
-	</div>
-</div>
 <div id="popupcontent"></div>
-<script> 
-	$(function() {	
-		feather.replace()
-	});
-	
-	$(".action-pageicons").click(function(event) {
-		
-		$.ajax({
-			url: "ajax/getmodule.php?pageSize=" + $("#pageSize").val() + "&currentPage=" + $(this).attr("page"),
-			
-			data: {
-				module: $(this).attr('module')
-			},
-			type: "POST",
-			dataType: "html",
-			success: function (data) {
-				$('#mainContent').html(data);
-			},
-			error: function (xhr, status) {
-				$('#mainContent').html("<h6 class=\"text-center\"><span class=\"text-danger\">Error Loading Selection:</span>  Verify the installation/configuration and/or contact your system administrator!</h6>");
-			}
-		});
-		
-		event.preventDefault();
-	
-	});
+<script>
+
 	
 	$("#pageSize").change(function() {
 		
@@ -266,4 +186,12 @@
 		
 		event.preventDefault();
 	});
+
+    $(document).ready(function() {
+        $("#endpoint-table").DataTable({
+            "paging": true,
+            "lengthMenu": [ [15, 30, 45, 60, -1], [15, 30, 45, 60, "All"] ],
+        });
+    });
+
 </script>

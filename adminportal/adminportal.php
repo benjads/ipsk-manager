@@ -118,6 +118,9 @@ HTML;
 		<!-- Bootstrap core CSS -->
 		<link href="styles/bootstrap.min.css" rel="stylesheet" >
 
+        <!-- JQuery tables (for endpoint sorting) -->
+        <link href="styles/jquery.dataTables.min.css" rel="stylesheet">
+
 		<!-- Custom styles for this template -->
 		<link href="styles/dashboard.css" rel="stylesheet">
 	</head>
@@ -215,5 +218,6 @@ HTML;
     <script type="text/javascript" src="scripts/feather.min.js"></script>
     <script type="text/javascript" src="scripts/chart.min.js"></script>
 	<script type="text/javascript" src="scripts/clipboard.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.dataTables.js"></script>
 	<script type="text/javascript" src="scripts/ipsk-adminportal-v1.js"></script>
 </html>
