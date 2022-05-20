@@ -20,22 +20,14 @@
 	
 	$actionRowData = "";
 	$pageData['endpointAssociationList'] = '';
-	$pageData['pageinationOutput'] = '';
-	$totalPages = 0;
-	$currentPage = 0;
-	$currentPageSizeSelection = "";
-	
-	$pageSize = (isset($_GET['pageSize'])) ? $_GET['pageSize'] : 25;
-	$currentPage = (isset($_GET['currentPage'])) ? $_GET['currentPage'] : 1;
-	
+
 	$associationList = $ipskISEDB->getEndPointAssociations();
-    $pageEnd = $associationList['count'];
 		
 	if($associationList){
 		if($associationList['count'] > 0){
             $pageData['endpointAssociationList'] .= '<table id="endpoint-table" class="table table-hover"><thead><tr><th scope="col">MAC Address</th><th scope="col">iPSK Endpoint Grouping</th><th scope="col">Expiration Date</th><th>Full Name</th><th>Email</th><th data-orderable="false" scope="col">View</th><th data-orderable="false" scope="col">Actions</th></tr></thead><tbody>';
 
-			for($idxId = 0; $idxId < $pageEnd; $idxId++) {
+			for($idxId = 0; $idxId < $associationList['count']; $idxId++) {
 							
 				if($associationList[$idxId]['accountEnabled'] == 1){
 					if($associationList[$idxId]['expirationDate'] == 0){
@@ -102,27 +94,6 @@
 </div>
 <div id="popupcontent"></div>
 <script>
-
-	
-	$("#pageSize").change(function() {
-		
-		$.ajax({
-			url: "ajax/getmodule.php?pageSize=" + $(this).val(),
-			
-			data: {
-				module: $(this).attr('module')
-			},
-			type: "POST",
-			dataType: "html",
-			success: function (data) {
-				$('#mainContent').html(data);
-			},
-			error: function (xhr, status) {
-				$('#mainContent').html("<h6 class=\"text-center\"><span class=\"text-danger\">Error Loading Selection:</span>  Verify the installation/configuration and/or contact your system administrator!</h6>");
-			}
-		});
-		
-	});
 	
 	$(".epg-tableicons").click(function(event) {
 		$.ajax({
