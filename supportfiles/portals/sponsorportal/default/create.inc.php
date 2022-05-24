@@ -83,6 +83,10 @@
 			if($wirelessNetwork){
 				$wifiSsid = $wirelessNetwork['ssidName'];
 			}
+
+            if(!$_SESSION['portalAuthorization']['attribute']){
+
+            }
 			
 			$endpointId = $ipskISEDB->addEndpoint($sanitizedInput['macAddress'],$sanitizedInput['fullName'], $sanitizedInput['endpointDescription'], $sanitizedInput['emailAddress'], $randomPSK, $duration, $_SESSION['logonSID']);
 			

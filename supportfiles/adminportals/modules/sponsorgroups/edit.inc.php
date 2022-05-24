@@ -104,7 +104,7 @@
 	
 	$baseValue = 4;
 
-	for($i = 1; $i < 10; $i++){
+	for($i = 1; $i < 11; $i++){
 		$baseValue = $baseValue << 1;
 		
 		if($baseValue & $groupPermissions){
@@ -289,6 +289,10 @@ $htmlbody = <<<HTML
 										<input type="checkbox" class="custom-control-input checkbox-update" base-value="16" value="{$checkBoxPermissions[16]['value']}" id="suspendCheck"{$checkBoxPermissions[16]['check']}>
 										<label class="custom-control-label" for="suspendCheck">Suspend an associated iPSK Endpoint's access</label>
 									</div>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input checkbox-update" base-value="4096" value="{$checkBoxPermissions[4096]['value']}" id="attributeCheck"{$checkBoxPermissions[4096]['check']}>
+										<label class="custom-control-label" for="attributeCheck">Attribute Endpoints to any name and email address</label>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -348,7 +352,8 @@ $htmlbody = <<<HTML
 				viewPassCheck: $("#viewPassCheck").val(),
 				viewPermission: $("#viewPermission").val(),
 				bulkCreateCheck: $("#bulkCreateCheck").val(),
-				portalPskEditCheck: $("#portalPskEditCheck").val()
+				portalPskEditCheck: $("#portalPskEditCheck").val(),
+				attributeCheck: $("#attributeCheck").val()
 			},
 			type: "POST",
 			dataType: "html",

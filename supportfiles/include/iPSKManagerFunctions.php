@@ -168,6 +168,7 @@
 			'viewPassCheck'	=>	FILTER_VALIDATE_INT,
 			'viewPermission'	=>	FILTER_VALIDATE_INT,
 			'resetPskCheck'	=>	FILTER_VALIDATE_INT,
+            'attributeCheck' => FILTER_VALIDATE_INT,
 			'groupName'	=>	array('filter'	=>	FILTER_SANITIZE_STRING,
 								  'flags'	=>	FILTER_FLAG_STRIP_LOW & FILTER_FLAG_STRIP_HIGH & FILTER_FLAG_STRIP_BACKTICK
 								  ),

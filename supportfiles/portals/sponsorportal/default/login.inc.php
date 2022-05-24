@@ -29,6 +29,7 @@
 	$_SESSION['portalAuthorization']['viewallPSK'] = false;
 	$_SESSION['portalAuthorization']['viewgroupPSK'] = false;
 	$_SESSION['portalAuthorization']['viewownedPSK'] = false;
+    $_SESSION['portalAuthorization']['attribute'] = false;
 	
 	$authCreate = false;
 	$bulkCreate = false;
@@ -39,6 +40,7 @@
 	$authViewAllPSK = false;
 	$authViewGroupPSK = false;
 	$authViewOwnedPSK = false;
+    $authAttribute = false;
 	
 	//System Sid Variable
 	$systemSID = $baseSid."-".$orgSid."-".$systemSid;
@@ -65,8 +67,9 @@
 					for($count = 0; $count < $authorizedGroups['count']; $count++){
 						for($userCount = 0; $userCount < $_SESSION['memberOf']['count']; $userCount++){
 							if($authorizedGroups[$count]['groupDn'] == $_SESSION['memberOf'][$userCount]){
-								
-								if(($authorizedGroups[$count]['groupPermissions'] & 2048) == 2048) { $bulkCreate = true; }
+
+                                if(($authorizedGroups[$count]['groupPermissions'] & 4096) == 4096) { $authAttribute = true; }
+                                if(($authorizedGroups[$count]['groupPermissions'] & 2048) == 2048) { $bulkCreate = true; }
 								if(($authorizedGroups[$count]['groupPermissions'] & 512) == 512) { $authCreate = true; }
 								if(($authorizedGroups[$count]['groupPermissions'] & 12) == 12) { $authViewAllPSK = true; }
 								if(($authorizedGroups[$count]['groupPermissions'] & 4) == 4) { $authViewAll = true; $authViewAllDn = $authorizedGroups[$count]['groupDn']; }
@@ -92,6 +95,7 @@
 					$_SESSION['portalAuthorization']['viewgroupPSK'] = $authViewGroupPSK;
 					$_SESSION['portalAuthorization']['viewowned'] = $authViewOwned;
 					$_SESSION['portalAuthorization']['viewownedPSK'] = $authViewOwnedPSK;
+                    $_SESSION['portalAuthorization']['attribute'] = $authAttribute;
 							
 					if($authZSuccess){					
 						$_SESSION['authorizationGranted'] = true;
@@ -167,8 +171,9 @@
 							for($count = 0; $count < $authorizedGroups['count']; $count++){
 								for($userCount = 0; $userCount < $_SESSION['memberOf']['count']; $userCount++){
 									if(strtolower($authorizedGroups[$count]['groupDn']) == strtolower($_SESSION['memberOf'][$userCount])){
-										
-										if(($authorizedGroups[$count]['groupPermissions'] & 2048) == 2048) { $bulkCreate = true; }
+
+                                        if(($authorizedGroups[$count]['groupPermissions'] & 4096) == 4096) { $authAttribute = true; }
+                                        if(($authorizedGroups[$count]['groupPermissions'] & 2048) == 2048) { $bulkCreate = true; }
 										if(($authorizedGroups[$count]['groupPermissions'] & 512) == 512) { $authCreate = true; }
 										if(($authorizedGroups[$count]['groupPermissions'] & 12) == 12) { $authViewAllPSK = true; }
 										if(($authorizedGroups[$count]['groupPermissions'] & 4) == 4) { $authViewAll = true; $authViewAllDn = $authorizedGroups[$count]['groupDn']; }
@@ -194,6 +199,7 @@
 							$_SESSION['portalAuthorization']['viewgroupPSK'] = $authViewGroupPSK;
 							$_SESSION['portalAuthorization']['viewowned'] = $authViewOwned;
 							$_SESSION['portalAuthorization']['viewownedPSK'] = $authViewOwnedPSK;
+                            $_SESSION['portalAuthorization']['attribute'] = $authAttribute;
 							
 							if($authZSuccess){		
 								$_SESSION['authorizationGranted'] = true;
