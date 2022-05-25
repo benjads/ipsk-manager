@@ -130,18 +130,18 @@
 			}
 		}
 	}
-	
-	if($_SESSION['portalAuthorization']['create'] == true){
-		$pageData['createButton'] = '<button id="createAssoc" class="btn btn-primary shadow" type="button">Create Associations</button>';
-	}else{
-		$pageData['createButton'] = '';
-	}
-	
-	if($_SESSION['portalAuthorization']['bulkcreate'] == true){
-		$pageData['bulkButton'] = '<button id="bulkAssoc" class="btn btn-primary shadow" type="button">Bulk Associations</button>';
-	}else{
-		$pageData['bulkButton'] = '';
-	}
+
+    if($_SESSION['portalAuthorization']['create'] == true){
+        $pageData['createButton'] = '<div class="col py-1"><button id="createAssoc" class="btn btn-primary shadow" type="button">Enroll a device</button></div>';
+    }else{
+        $pageData['createButton'] = '';
+    }
+
+    if($_SESSION['portalAuthorization']['bulkcreate'] == true){
+        $pageData['bulkButton'] = '<div class="col py-1"><button id="bulkAssoc" class="btn btn-primary shadow" type="button">Bulk enroll</button></div>';
+    }else{
+        $pageData['bulkButton'] = '';
+    }
 
 	print <<< HTML
 <html lang="en">
@@ -165,23 +165,21 @@
 	<div class="container">
 		<div class="float-rounded mx-auto shadow-lg p-2 bg-white text-center">
 				<div class="mt-2 mb-4">
-					<img src="images/iPSK-Logo.svg" width="108" height="57" />
+					<img src="images/ucsc-logo-ipsk.png" height="60px" />
 				</div>
 				<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
-				<h2 class="h6 mt-2 mb-3 font-weight-normal">Manage Identity Pre-Shared Keys ("iPSK") Associations</h2>
+				<h2 class="h6 mt-2 mb-3 font-weight-normal">Manage device enrollments to ResWiFi-Devices</h2>
 				<div class="mb-3 mx-auto shadow p-2 bg-white border border-primary">
-					<div class="row">
-						<div class="col-3">				
-						{$pageData['createButton']}
-						</div>
-						<div class="col-3">				
-						{$pageData['bulkButton']}
-						</div>
-						<div class="col-3">				
-							<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage Associations</button>
-						</div>
-						<div class="col-3">				
-							<button id="signOut" class="btn btn-primary shadow" type="button">Sign Out</button>
+					<div class="container">
+						<div class="row">
+							{$pageData['createButton']}
+							{$pageData['bulkButton']}
+							<div class="col py-1">
+								<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage enrollments</button>
+							</div>
+							<div class="col py-1">
+								<button id="signOut" class="btn btn-primary shadow" type="button">Sign out</button>
+							</div>
 						</div>
 					</div>
 				</div>
