@@ -84,11 +84,15 @@
 				$wifiSsid = $wirelessNetwork['ssidName'];
 			}
 
-            if(!$_SESSION['portalAuthorization']['attribute']){
-
+            if($_SESSION['portalAuthorization']['attribute']){
+               $fullName = $sanitizedInput['fullName'];
+               $emailAddress = $sanitizedInput['emailAddress'];
+            } else {
+                $fullName = $_SESSION['fullName'];
+                $emailAddress = $_SESSION['emailAddress'];
             }
 			
-			$endpointId = $ipskISEDB->addEndpoint($sanitizedInput['macAddress'],$sanitizedInput['fullName'], $sanitizedInput['endpointDescription'], $sanitizedInput['emailAddress'], $randomPSK, $duration, $_SESSION['logonSID']);
+			$endpointId = $ipskISEDB->addEndpoint($sanitizedInput['macAddress'], $fullName, $sanitizedInput['endpointDescription'], $emailAddress, $randomPSK, $duration, $_SESSION['logonSID']);
 			
 			if($endpointId){
 				//LOG::Entry
