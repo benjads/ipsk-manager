@@ -47,12 +47,12 @@ HTML;
 	
 	//Add up the permissions for the group.
 	if($enablePskEdit){
-		$permissions = $sanitizedInput['portalPskEditCheck'] + $sanitizedInput['bulkCreateCheck'] + $sanitizedInput['suspendCheck'] + $sanitizedInput['unsuspendCheck'] + $sanitizedInput['extendCheck'] + $sanitizedInput['deleteCheck'] + $sanitizedInput['editCheck'] + $sanitizedInput['createCheck'] + $sanitizedInput['viewPassCheck'] + $sanitizedInput['viewPermission'] + $sanitizedInput['resetPskCheck'];
+		$permissions = $sanitizedInput['portalPskEditCheck'] + $sanitizedInput['bulkCreateCheck'] + $sanitizedInput['suspendCheck'] + $sanitizedInput['unsuspendCheck'] + $sanitizedInput['extendCheck'] + $sanitizedInput['deleteCheck'] + $sanitizedInput['editCheck'] + $sanitizedInput['createCheck'] + $sanitizedInput['viewPassCheck'] + $sanitizedInput['viewPermission'] + $sanitizedInput['resetPskCheck'] + $sanitizedInput['attributeCheck'];
 	}else{
-		$permissions = $sanitizedInput['bulkCreateCheck'] + $sanitizedInput['suspendCheck'] + $sanitizedInput['unsuspendCheck'] + $sanitizedInput['extendCheck'] + $sanitizedInput['deleteCheck'] + $sanitizedInput['editCheck'] + $sanitizedInput['createCheck'] + $sanitizedInput['viewPassCheck'] + $sanitizedInput['viewPermission'] + $sanitizedInput['resetPskCheck'];
+		$permissions = $sanitizedInput['bulkCreateCheck'] + $sanitizedInput['suspendCheck'] + $sanitizedInput['unsuspendCheck'] + $sanitizedInput['extendCheck'] + $sanitizedInput['deleteCheck'] + $sanitizedInput['editCheck'] + $sanitizedInput['createCheck'] + $sanitizedInput['viewPassCheck'] + $sanitizedInput['viewPermission'] + $sanitizedInput['resetPskCheck'] + $sanitizedInput['attributeCheck'];
 	}
 	
-	if($permissions > 0 && $permissions < 4095){
+	if($permissions > 0 && $permissions <= 8191){
 		
 		if($sanitizedInput['sponsorGroupName'] != "" && isset($_POST['endpointGroupMembers']) && isset($_POST['wirelessNetworkMembers']) && isset($_POST['authorizationGroups'])){
 			if(is_array($_POST['endpointGroupMembers']) && is_array($_POST['wirelessNetworkMembers'])){

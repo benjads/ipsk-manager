@@ -77,6 +77,12 @@
 						
 						$trackSeenObjects[$_SESSION['authorizedEPGroups'][$count]['endpointGroupId']] = true;
 						$pageValid = true;
+
+                        if($_SESSION['portalAuthorization']['attribute']){
+                            $pageData['allowAttribution'] = "";
+                        } else {
+                            $pageData['allowAttribution'] = "readonly";
+                        }
 					}
 				}
 			}
@@ -207,14 +213,14 @@
 									<div class="col-sm">
 										<div class="form-group">
 											<label for="fullName">Full Name</label>
-											<input type="text" class="form-control mt-2 mb-3 user-input shadow form-validation" validation-state="required" value="{$sessionData['fullName']}" name="fullName" placeholder="John Smith">
+											<input type="text" class="form-control mt-2 mb-3 user-input shadow form-validation" validation-state="required" {$pageData['allowAttribution']} value="{$sessionData['fullName']}" name="fullName" placeholder="John Smith">
 											<div class="invalid-feedback">Please enter your Full Name</div>
 										</div>
 									</div>
 									<div class="col-sm">
 										<div class="form-group">
 											<label for="emailAddress">Email address</label>
-											<input type="email" class="form-control mt-2 mb-3 user-input shadow form-validation" validation-state="required" value="{$sessionData['emailAddress']}" name="emailAddress" placeholder="john@company.com">
+											<input type="email" class="form-control mt-2 mb-3 user-input shadow form-validation" validation-state="required" {$pageData['allowAttribution']}  value="{$sessionData['emailAddress']}" name="emailAddress" placeholder="john@company.com">
 											<div class="invalid-feedback">Please enter a valid email address</div>
 										</div>
 									</div>

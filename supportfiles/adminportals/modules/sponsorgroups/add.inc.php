@@ -212,6 +212,10 @@ HTML;
 										<input type="checkbox" class="custom-control-input checkbox-update" base-value="16" value="" id="suspendCheck">
 										<label class="custom-control-label" for="suspendCheck">Suspend an associated iPSK Endpoint's access</label>
 									</div>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input checkbox-update" base-value="4096" value="4096" id="attributeCheck" checked>
+										<label class="custom-control-label" for="attributeCheck">Attribute Endpoints to any name and email address</label>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -271,8 +275,8 @@ HTML;
 				viewPassCheck: $("#viewPassCheck").val(),
 				viewPermission: $("#viewPermission").val(),
 				bulkCreateCheck: $("#bulkCreateCheck").val(),
-				portalPskEditCheck: $("#portalPskEditCheck").val()
-				
+				portalPskEditCheck: $("#portalPskEditCheck").val(),
+				attributeCheck: $("#attributeCheck").val(),
 			},
 			type: "POST",
 			dataType: "html",
