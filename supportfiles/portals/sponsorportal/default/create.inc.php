@@ -17,7 +17,7 @@
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-	
+
 	//Clear Variables and set to blank
 	$pageData['errorMessage'] = "";
     $pageData['createComplete'] = "";
@@ -26,7 +26,7 @@
 	$pageData['hidePskFlag'] = "";
 	$randomPassword = "";
 	$wifiSsid = '';
-	
+
 	if(!ipskLoginSessionCheck()){
 		$portalId = $_GET['portalId'];
 		$_SESSION = null;
@@ -34,27 +34,27 @@
 		header("Location: /index.php?portalId=".$portalId);
 		die();
 	}
-	
+
 	if($_SESSION['portalAuthorization']['create'] == false){
 		header("Location: /manage.php?portalId=".$portalId);
 		die();
 	}
-	
+
 	$userEPCount = $ipskISEDB->getUserEndpointCount($sanitizedInput['associationGroup'], $_SESSION['logonSID']);
-	
+
 	for($count = 0; $count < $_SESSION['authorizedEPGroups']['count']; $count++) {
 		if($_SESSION['authorizedEPGroups'][$count]['endpointGroupId'] == $sanitizedInput['associationGroup']){
 			$epGroupMax = $_SESSION['authorizedEPGroups'][$count]['maxDevices'];
 		}
 	}
-	
+
 	if($userEPCount < $epGroupMax || $epGroupMax == 0){
-		
+
 		$smtpSettings = $ipskISEDB->getSmtpSettings();
-		
-		if(isset($sanitizedInput['associationGroup']) && isset($sanitizedInput['macAddress']) && isset($sanitizedInput['endpointDescription']) && isset($sanitizedInput['emailAddress']) && isset($sanitizedInput['fullName'])) {	
+
+		if(isset($sanitizedInput['associationGroup']) && isset($sanitizedInput['macAddress']) && isset($sanitizedInput['endpointDescription']) && isset($sanitizedInput['emailAddress']) && isset($sanitizedInput['fullName'])) {
 			$endpointGroupAuthorization = $ipskISEDB->getAuthorizationTemplatesbyEPGroupId($sanitizedInput['associationGroup']);
-			
+
 			if($endpointGroupAuthorization['ciscoAVPairPSK'] == "*devicerandom*"){
 				$randomPassword = $ipskISEDB->generateRandomPassword($endpointGroupAuthorization['pskLength']);
 				$randomPSK = "psk=".$randomPassword;
@@ -71,34 +71,34 @@
 				$randomPassword = $endpointGroupAuthorization['ciscoAVPairPSK'];
 				$randomPSK = "psk=".$randomPassword;
 			}
-			
+
 			if($endpointGroupAuthorization['termLengthSeconds'] == 0){
 				$duration = $endpointGroupAuthorization['termLengthSeconds'];
 			}else{
 				$duration = time() + $endpointGroupAuthorization['termLengthSeconds'];
 			}
-			
+
 			$wirelessNetwork = $ipskISEDB->getWirelessNetworkById($sanitizedInput['wirelessSSID']);
-			
+
 			if($wirelessNetwork){
 				$wifiSsid = $wirelessNetwork['ssidName'];
 			}
-			
+
 			$endpointId = $ipskISEDB->addEndpoint($sanitizedInput['macAddress'],$sanitizedInput['fullName'], $sanitizedInput['endpointDescription'], $sanitizedInput['emailAddress'], $randomPSK, $duration, $_SESSION['logonSID']);
-			
+
 			if($endpointId){
 				//LOG::Entry
 				$logData = $ipskISEDB->generateLogData(Array("sanitizedInput"=>$sanitizedInput));
 				$logMessage = "REQUEST:SUCCESS;ACTION:SPONSORCREATE;METHOD:ADD-ENDPOINT;MAC:".$sanitizedInput['macAddress'].";REMOTE-IP:".$_SERVER['REMOTE_ADDR'].";USERNAME:".$_SESSION['logonUsername'].";SID:".$_SESSION['logonSID'].";";
 				$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-					
-					
+
+
 				if($ipskISEDB->addEndpointAssociation($endpointId, $sanitizedInput['macAddress'], $sanitizedInput['associationGroup'], $_SESSION['logonSID'])){
 					//LOG::Entry
 					$logData = $ipskISEDB->generateLogData(Array("sanitizedInput"=>$sanitizedInput));
 					$logMessage = "REQUEST:SUCCESS;ACTION:SPONSORCREATE;METHOD:ADD-ENDPOINT-ASSOCIATION;MAC:".$sanitizedInput['macAddress'].";REMOTE-IP:".$_SERVER['REMOTE_ADDR'].";USERNAME:".$_SESSION['logonUsername'].";SID:".$_SESSION['logonSID'].";";
 					$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-					
+
 					if($ipskISEDB->emailEndpointGroup($sanitizedInput['associationGroup'])){
 						sendHTMLEmail($sanitizedInput['emailAddress'], $portalSettings['portalName'], $randomPassword, $wifiSsid, $sanitizedInput['macAddress'], $endpointGroupAuthorization['groupName'], $sanitizedInput['endpointDescription'], $sanitizedInput['fullName'], $_SESSION['fullName'], $smtpSettings);
 						/*
@@ -107,14 +107,14 @@
 						 *sendEmail($sanitizedInput['emailAddress'],"iPSK Wi-Fi Credentials","You have been successfully setup to connect to the Wi-Fi Network, please use the following Passcode:".$randomPassword."\n\nThank you!",$smtpSettings);
 						 */
 					}
-					$pageData['createComplete'] .= "<h3>The Endpoint Association has successfully completed.</h3><h6>The uniquely generated Pre-Shared Key for the end point is:</h6>";
+					$pageData['createComplete'] .= "<h3>Your device has been successfully enrolled</h3><h6>Connect to $wifiSsid using the unique password:</h6>";
 				}else{
 					//LOG::Entry
 					$logData = $ipskISEDB->generateLogData(Array("sanitizedInput"=>$sanitizedInput));
 					$logMessage = "REQUEST:FAILURE[unable_to_create_endpoint_association];ACTION:SPONSORCREATE;MAC:".$sanitizedInput['macAddress'].";REMOTE-IP:".$_SERVER['REMOTE_ADDR'].";USERNAME:".$_SESSION['logonUsername'].";SID:".$_SESSION['logonSID'].";";
 					$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-					
-					$pageData['createComplete'] .= "<h3>The Endpoint Association has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint association)</h5>";
+
+					$pageData['createComplete'] .= "<h3>The enrollment has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint association)</h5>";
 					$randomPassword = "";
 					$pageData['hidePskFlag'] = " d-none";
 				}
@@ -123,8 +123,8 @@
 				$logData = $ipskISEDB->generateLogData(Array("sanitizedInput"=>$sanitizedInput));
 				$logMessage = "REQUEST:FAILURE[unable_to_create_endpoint];ACTION:SPONSORCREATE;MAC:".$sanitizedInput['macAddress'].";REMOTE-IP:".$_SERVER['REMOTE_ADDR'].";USERNAME:".$_SESSION['logonUsername'].";SID:".$_SESSION['logonSID'].";";
 				$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-				
-				$pageData['createComplete'] .= "<h3>The Endpoint Association has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint)</h5>";
+
+				$pageData['createComplete'] .= "<h3>The enrollment has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint)</h5>";
 				$randomPassword = "";
 				$pageData['hidePskFlag'] = " d-none";
 			}
@@ -164,25 +164,24 @@
   <body>
 	<div class="container">
 		<div class="float-rounded mx-auto shadow-lg p-2 bg-white text-center">
-				<div class="mt-2 mb-4">
-					<img src="images/ucsc-logo-ipsk.png" height="60px" />
-				</div>
-				<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
-				<h2 class="h6 mt-2 mb-3 font-weight-normal">Manage device enrollments to ResWiFi-Devices</h2>
-				<div class="mb-3 mx-auto shadow p-2 bg-white border border-primary">
-					<div class="container">
-						<div class="row">
-							{$pageData['createButton']}
-							{$pageData['bulkButton']}
-							<div class="col py-1">
-								<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage enrollments</button>
-							</div>
-							<div class="col py-1">
-								<button id="signOut" class="btn btn-primary shadow" type="button">Sign out</button>
-							</div>
-						</div>
-					</div>
-				</div>
+		    <div class="mt-2 mb-4">
+		        <img src="images/ucsc-logo-ipsk.png" height="50px" />
+            </div>
+            <h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
+            <div class="mb-3 mx-auto shadow p-2 bg-white border border-primary">
+                <div class="container">
+                    <div class="row">
+                        {$pageData['createButton']}
+                        {$pageData['bulkButton']}
+                        <div class="col py-1">
+                            <button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage enrollments</button>
+                        </div>
+                        <div class="col py-1">
+                            <button id="signOut" class="btn btn-primary shadow" type="button">Sign out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 				
 				<div class="row text-left">
 					<div class="col-2"></div>
@@ -192,21 +191,21 @@
 						</div>
 						<div class="row">
 							<div class="col{$pageData['hidePskFlag']}">
-								<div class="input-group input-group-sm mb-3 shadow copied-popover" data-animation="true" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="top" data-content="Pre Shared Key has been Copied!">
+								<div class="input-group input-group-sm mb-3 shadow copied-popover" data-animation="true" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="top" data-content="Password has been copied!">
 									<div class="input-group-prepend">
-										<span class="input-group-text font-weight-bold shadow" id="basic-addon1">Pre-Shared Key</span>
+										<span class="input-group-text font-weight-bold shadow" id="basic-addon1">Password</span>
 									</div>
 									<input type="text" id="presharedKey" class="form-control shadow" process-value="$randomPassword" value="$randomPassword" aria-label="password" aria-describedby="basic-addon1" data-lpignore="true" readonly>
 									<div class="input-group-append">
 										<span class="input-group-text font-weight-bold shadow" id="basic-addon1"><a id="copyPassword" href="#" data-clipboard-target="#presharedKey"><span id="passwordfeather" data-feather="copy"></span></a></span>
 									</div>
 								</div>
-								Click on the copy button to copy the Pre Shared Key to your Clipboard.
+								Click on the copy button to copy this password to your clipboard.
 							</div>
 						</div>
-						<div class="row">
+						<div class="row pt-3">
 							<div class="col text-center">
-								<button id="newAssoc" class="btn btn-primary shadow" type="button">Create New</button>
+								<button id="newAssoc" class="btn btn-primary shadow" type="button">Add another</button>
 							</div>
 						</div>
 					</div>
@@ -217,7 +216,15 @@
 			</form>
 		</div>
 		<div class="m-0 mx-auto p-2 bg-white text-center">
-			<p>Copyright &copy; 2019 Cisco and/or its affiliates.</p>
+			<p>For assistance, email resnet@ucsc.edu, call (831) 459-4638, or visit <a href="https://its.ucsc.edu/resnet" target="_blank">UCSC Residential Network Services</a>.</p>
+			<div class="row justify-content-center pb-2">
+			    <div class="col-5 col-md-2 border-right">
+			        <a href="https://its.ucsc.edu/resnet/enroll-device.html" target="_blank">Instructions</a>
+			    </div>
+			    <div class="col-6 col-md-3">
+			        <a href="https://its.ucsc.edu/policies/resnet-rup.html" target="_blank">Responsible Use Policy</a>
+			    </div>
+			</div>
 		</div>
 		
 	</div>

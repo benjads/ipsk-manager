@@ -259,23 +259,20 @@
 	<div class="container">
 		<div class="float-rounded mx-auto shadow-lg p-2 bg-white text-center">
 				<div class="mt-2 mb-4">
-					<img src="images/iPSK-Logo.svg" width="108" height="57" />
+					<img src="images/ucsc-logo-ipsk.png" height="50px" />
 				</div>
 				<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
-				<h2 class="h6 mt-2 mb-3 font-weight-normal">Manage Identity Pre-Shared Keys ("iPSK") Associations</h2>
 				<div class="mb-3 mx-auto shadow p-2 bg-white border border-primary">
-					<div class="row">
-						<div class="col-3">				
-						{$pageData['createButton']}
-						</div>
-						<div class="col-3">				
-						{$pageData['bulkButton']}
-						</div>
-						<div class="col-3">				
-							<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage Associations</button>
-						</div>
-						<div class="col-3">				
-							<button id="signOut" class="btn btn-primary shadow" type="button">Sign Out</button>
+					<div class="container">
+						<div class="row">
+							{$pageData['createButton']}
+							{$pageData['bulkButton']}
+							<div class="col py-1">
+								<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage enrollments</button>
+							</div>
+							<div class="col py-1">
+								<button id="signOut" class="btn btn-primary shadow" type="button">Sign out</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -313,7 +310,15 @@
 			</form>
 		</div>
 		<div class="m-0 mx-auto p-2 bg-white text-center">
-			<p>Copyright &copy; 2019 Cisco and/or its affiliates.</p>
+			<p>For assistance, email resnet@ucsc.edu, call (831) 459-4638, or visit <a href="https://its.ucsc.edu/resnet" target="_blank">UCSC Residential Network Services</a>.</p>
+			<div class="row justify-content-center pb-2">
+			    <div class="col-5 col-md-2 border-right">
+			        <a href="https://its.ucsc.edu/resnet/enroll-device.html" target="_blank">Instructions</a>
+			    </div>
+			    <div class="col-6 col-md-3">
+			        <a href="https://its.ucsc.edu/policies/resnet-rup.html" target="_blank">Responsible Use Policy</a>
+			    </div>
+			</div>
 		</div>
 		
 	</div>

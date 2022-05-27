@@ -140,7 +140,7 @@
 		<div class="float-rounded mx-auto shadow-lg p-2 bg-white text-center">
 			<form id="associationform" action="create.php?portalId=$portalId" method="post">
 				<div class="mt-2 mb-4">
-					<img src="images/ucsc-logo-ipsk.png" height="60px" />
+					<img src="images/ucsc-logo-ipsk.png" height="50px" />
 				</div>
 				<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
 				<div class="mb-3 mx-auto shadow p-2 bg-white border border-primary">
@@ -161,7 +161,7 @@
 					<div class="row text-left">
 						<div class="col-sm"></div>
 						<div class="col-10 col-sm-10 mt-2 shadow mx-auto p-2 bg-white border border-primary">
-<!--									<h6>Association type:</h6>-->
+									<!--<h6>Association type:</h6>-->
 									{$pageData['endpointGroupList']}
 									<div class="container-fluid d-none">
 										<div class="row">
@@ -230,12 +230,12 @@
 			</form>
 		</div>
 		<div class="m-0 mx-auto p-2 bg-white text-center">
-			<p>For assistance, call (831) 459-4638 or visit <a href="https://its.ucsc.edu/resnet" target="_blank">UCSC Residential Network Services</a>.</p>
+			<p>For assistance, email resnet@ucsc.edu, call (831) 459-4638, or visit <a href="https://its.ucsc.edu/resnet" target="_blank">UCSC Residential Network Services</a>.</p>
 			<div class="row justify-content-center pb-2">
-			    <div class="col-2 border-right">
+			    <div class="col-5 col-md-2 border-right">
 			        <a href="https://its.ucsc.edu/resnet/enroll-device.html" target="_blank">Instructions</a>
 			    </div>
-			    <div class="col-3">
+			    <div class="col-6 col-md-3">
 			        <a href="https://its.ucsc.edu/policies/resnet-rup.html" target="_blank">Responsible Use Policy</a>
 			    </div>
 			</div>

@@ -94,13 +94,9 @@ $htmlbody = <<<HTML
         </button>
       </div>
       <div class="modal-body">
-		<label class="font-weight-bold" for="macAddress">Endpoint MAC Address</label>
+		<label class="font-weight-bold" for="macAddress">Device MAC Address</label>
 		<div class="form-group input-group-sm font-weight-bold">
 			<input type="text" class="form-control shadow" id="macAddress" value="{$endPointAssociation['macAddress']}" readonly>
-		</div>
-		<label class="font-weight-bold" for="fullName">Full Name</label>
-		<div class="form-group input-group-sm font-weight-bold">
-			<input type="text" class="form-control shadow" id="fullName" value="{$endPointAssociation['fullName']}" readonly>
 		</div>
 		<label class="font-weight-bold" for="description">Description</label>
 		<div class="form-group input-group-sm font-weight-bold">
@@ -110,48 +106,20 @@ $htmlbody = <<<HTML
 		<div class="form-group input-group-sm font-weight-bold">
 			<input type="text" class="form-control shadow" id="emailAddress" value="{$endPointAssociation['emailAddress']}" readonly>
 		</div>
-		<label class="font-weight-bold" for="epGroupName">iPSK Endpoint Grouping</label>
+		<label class="font-weight-bold" for="expirationDate">Expiration Date:</label>
 		<div class="form-group input-group-sm font-weight-bold">
-			<input type="text" class="form-control shadow" id="epGroupName" value="{$endPointAssociation['epGroupName']}" readonly>
+			<input type="text" class="form-control shadow" id="expirationDate" value="{$endPointAssociation['expirationDate']}" readonly>
 		</div>
-		<div class="row">
-			<div class="col">
-				<label class="font-weight-bold" for="expirationDate">Expiration Date:</label>
-				<div class="form-group input-group-sm font-weight-bold">
-					<input type="text" class="form-control shadow" id="expirationDate" value="{$endPointAssociation['expirationDate']}" readonly>
-				</div>
-			</div>
-			<div class="col">
-				<label class="font-weight-bold" for="lastAccessed">Last Accessed Date:</label>
-				<div class="form-group input-group-sm font-weight-bold">
-					<input type="text" class="form-control shadow" id="lastAccessed" value="{$endPointAssociation['lastAccessed']}" readonly>
-				</div>
-			</div>
+		<label class="font-weight-bold" for="createdDate">Enrollment Date:</label>
+		<div class="form-group input-group-sm font-weight-bold">
+			<input type="text" class="form-control shadow" id="createdDate" value="{$endPointAssociation['createdDate']}" readonly>
 		</div>
-		<div class="row">
-			<div class="col">
-				<label class="font-weight-bold" for="epCreatedDate">Endpoint Creation Date:</label>
-				<div class="form-group input-group-sm font-weight-bold">
-					<input type="text" class="form-control shadow" id="epCreatedDate" value="{$endPointAssociation['epCreatedDate']}" readonly>
-				</div>
-			</div>
-			<div class="col">
-				<label class="font-weight-bold" for="createdDate">Association Creation Date:</label>
-				<div class="form-group input-group-sm font-weight-bold">
-					<input type="text" class="form-control shadow" id="createdDate" value="{$endPointAssociation['createdDate']}" readonly>
-				</div>
-			</div>
-		</div>
-		<label class="font-weight-bold" for="psk">Pre-Shared Key:</label>
+		<label class="font-weight-bold" for="psk">Unique Password:</label>
 		<div class="input-group form-group input-group-sm font-weight-bold">
 			{$endPointAssociation['pskValue']}
 			<div class="input-group-append shadow">
 				<span class="input-group-text font-weight-bold" id="basic-addon1"><a id="showpassword" href="#"><span id="passwordfeather" data-feather="eye"></span></a></span>
 			</div>
-		</div>
-		<label class="font-weight-bold" for="createdBy">Created By:</label>
-		<div class="form-group input-group-sm font-weight-bold shadow">
-			<input type="text" class="form-control shadow" id="createdBy" value="{$endPointAssociation['createdBy']}" readonly>
 		</div>
 	  </div>
       <div class="modal-footer">
