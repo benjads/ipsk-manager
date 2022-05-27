@@ -91,9 +91,8 @@
                 $fullName = $_SESSION['fullName'];
                 $emailAddress = $_SESSION['emailAddress'];
             }
-			
+
 			$endpointId = $ipskISEDB->addEndpoint($sanitizedInput['macAddress'], $fullName, $sanitizedInput['endpointDescription'], $emailAddress, $randomPSK, $duration, $_SESSION['logonSID']);
-			
 			if($endpointId){
 				//LOG::Entry
 				$logData = $ipskISEDB->generateLogData(Array("sanitizedInput"=>$sanitizedInput));

@@ -50,7 +50,7 @@
 	$endpointAssociationList = $ipskISEDB->getEndPointAssociationList($_SESSION['authorizationGroups'], $_SESSION['portalSettings']['id'], $_SESSION['portalAuthorization']['viewall'], $_SESSION['portalAuthorization']['viewallDn']);
 
 	if($endpointAssociationList){
-		$pageData['endpointAssociationList'] .= '<table class="table table-hover"><thead><tr><th scope="col"><div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" base-value="1" value="0" id="allCheck"><label class="custom-control-label" for="allCheck">MAC Address</label></div></th><th scope="col">Endpoint Group</th><th scope="col">Expiration Date</th><th scope="col">View</th><th scope="col">Actions</th></tr></thead><tbody>';
+		$pageData['endpointAssociationList'] .= '<table class="table table-hover"><thead><tr><th scope="col"><div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" base-value="1" value="0" id="allCheck"><label class="custom-control-label" for="allCheck">MAC Address</label></div></th><!--<th scope="col">Endpoint Group</th>--><th scope="col">Expiration Date</th><th scope="col">View</th><th scope="col">Actions</th></tr></thead><tbody>';
 		
 		for($idxId = 0; $idxId < $endpointAssociationList['count']; $idxId++) {
 			$viewEnabled = false;
@@ -188,7 +188,7 @@
 	for($assocId = $pageStart;$assocId < $pageEnd; $assocId++){
 		$pageData['endpointAssociationList'] .= '<tr>';
 		$pageData['endpointAssociationList'] .= '<td>'.$associationList[$assocId]['macAddress'].'</td>';
-		$pageData['endpointAssociationList'] .= '<td>'.$associationList[$assocId]['epGroupName'].'</td>';
+//		$pageData['endpointAssociationList'] .= '<td>'.$associationList[$assocId]['epGroupName'].'</td>';
 		$pageData['endpointAssociationList'] .= '<td>'.$associationList[$assocId]['expiration'].'</td>';
 		$pageData['endpointAssociationList'] .= '<td>'.$associationList[$assocId]['view'].'</td>';
 		$pageData['endpointAssociationList'] .= '<td>'.$associationList[$assocId]['action'].'</td>';
@@ -196,21 +196,21 @@
 	}
 	
 	$pageData['endpointAssociationList'] .= "</tbody></table>";
-		
-	if($_SESSION['portalAuthorization']['create'] == true){
-		$pageData['createButton'] = '<div class="col py-1"><button id="createAssoc" class="btn btn-primary shadow" type="button">Create Associations</button></div>';
-	}else{
-		$pageData['createButton'] = '';
-	}
-	
-	if($_SESSION['portalAuthorization']['bulkcreate'] == true){
-		$pageData['bulkButton'] = '<div class="col py-1"><button id="bulkAssoc" class="btn btn-primary shadow" type="button">Bulk Associations</button></div>';
-	}else{
-		$pageData['bulkButton'] = '';
-	}
+
+    if($_SESSION['portalAuthorization']['create'] == true){
+        $pageData['createButton'] = '<div class="col py-1"><button id="createAssoc" class="btn btn-primary shadow" type="button">Enroll a device</button></div>';
+    }else{
+        $pageData['createButton'] = '';
+    }
+
+    if($_SESSION['portalAuthorization']['bulkcreate'] == true){
+        $pageData['bulkButton'] = '<div class="col py-1"><button id="bulkAssoc" class="btn btn-primary shadow" type="button">Bulk enroll</button></div>';
+    }else{
+        $pageData['bulkButton'] = '';
+    }
 	
 	if($pageNotice){
-		$pageData['pageNotice'] = '<div class="row"><div class="col-1"></div><div class="col"><span class="h5 text-danger"><strong>Notice:</strong> You have exceeded your allotment of devices you are allowed to Provision</span></div><div class="col-1"></div></div>';
+		$pageData['pageNotice'] = '<div class="row"><div class="col-1"></div><div class="col"><span class="h5 text-danger"><strong>Notice:</strong> You have exceeded your allotment of devices you are allowed to enroll</span></div><div class="col-1"></div></div>';
 	}else{
 		$pageData['pageNotice'] = "";
 	}
@@ -240,20 +240,19 @@
 		<div class="float-rounded mx-auto shadow-lg p-2 bg-white text-center">
 			{$pageData['pageNotice']}
 			<div class="mt-2 mb-4">
-				<img src="images/iPSK-Logo.svg" width="108" height="57" />
+				<img src="images/ucsc-logo-ipsk.png" height="50px" />
 			</div>
 			<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
-			<h2 class="h6 mt-2 mb-3 font-weight-normal">Manage Identity Pre-Shared Keys ("iPSK") Associations</h2>
 			<div class="mb-3 mx-auto shadow p-2 bg-white border border-primary">
 				<div class="container">
 					<div class="row">
 						{$pageData['createButton']}
 						{$pageData['bulkButton']}
 						<div class="col py-1">
-							<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage Associations</button>
+							<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage enrollments</button>
 						</div>
 						<div class="col py-1">
-							<button id="signOut" class="btn btn-primary shadow" type="button">Sign Out</button>
+							<button id="signOut" class="btn btn-primary shadow" type="button">Sign out</button>
 						</div>
 					</div>
 				</div>
@@ -261,7 +260,7 @@
 			<div class="row text-left">
 				<div class="col-sm"></div>
 				<div class="col-10 col-sm-10 mt-2 shadow mx-auto p-2 bg-white border border-primary text-center">
-					<h4 class="h4">Manage Endpoint Associations</h4>
+					<h4 class="h4">Manage device enrollments</h4>
 				</div>
 				<div class="col-sm"></div>
 			</div>
@@ -301,7 +300,15 @@
 			</div>
 		</div>
 		<div class="m-0 mx-auto p-2 bg-white text-center">
-			<p>Copyright &copy; 2019 Cisco and/or its affiliates.</p>
+			<p>For assistance, email resnet@ucsc.edu, call (831) 459-4638, or visit <a href="https://its.ucsc.edu/resnet" target="_blank">UCSC Residential Network Services</a>.</p>
+			<div class="row justify-content-center pb-2">
+			    <div class="col-5 col-md-2 border-right">
+			        <a href="https://its.ucsc.edu/resnet/enroll-device.html" target="_blank">Instructions</a>
+			    </div>
+			    <div class="col-6 col-md-3">
+			        <a href="https://its.ucsc.edu/policies/resnet-rup.html" target="_blank">Responsible Use Policy</a>
+			    </div>
+			</div>
 		</div>
 	</div>
   <div id="popupcontent"></div>

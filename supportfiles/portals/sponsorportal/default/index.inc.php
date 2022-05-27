@@ -50,21 +50,20 @@
   <body class="text-center">
     <div class="float-rounded mx-auto shadow-lg p-2 bg-white">
 		<form action="login.php?portalId=$portalId" method="post" class="form-signin">
-			<div class="mt-2 mb-4">
-				<img src="images/iPSK-Logo.svg" width="108" height="57" />
+			<div class="mt-2 mb-4 px-4">
+				<img src="images/ucsc-logo-ipsk.png" width="240px" />
 			</div>
 			<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
 			<h2 class="h6 mt-2 mb-3 font-weight-normal">Please Login</h2>
 			<div class="col">
 				<div class="alert alert-danger shadow" role="alert">{$pageData['errorMessage']}</div>
 			</div>
-			<label for="inputEmail" class="sr-only">Username</label>
-			<input type="text" name="inputUsername" id="inputUsername" class="form-control mt-2 mb-3 shadow" placeholder="Username" required autofocus>
-			<label for="inputPassword" class="sr-only">Password</label>
-			<input type="password" name="inputPassword" id="inputPassword" class="form-control mt-2 mb-3 shadow" placeholder="Password" required>
+			<label for="inputEmail" class="sr-only">CruzID</label>
+			<input type="text" name="inputUsername" id="inputUsername" class="form-control mt-2 mb-3 shadow" placeholder="CruzID" required autofocus>
+			<label for="inputPassword" class="sr-only">Gold Password</label>
+			<input type="password" name="inputPassword" id="inputPassword" class="form-control mt-2 mb-3 shadow" placeholder="Gold Password" required>
 			<button class="btn btn-lg btn-primary btn-block mt-2 mb-3" type="submit">Sign in</button>
 		</form>
-		<p class="mt-5 mb-0 text-muted">Copyright &copy; 2019 Cisco and/or its affiliates.</p>
 	</div>
   </body>
 </html>
@@ -93,18 +92,17 @@ HTML;
   <body class="text-center">
     <div class="float-rounded mx-auto shadow-lg p-2 bg-white">
 		<form action="login.php?portalId=$portalId" method="post" class="form-signin">
-			<div class="mt-2 mb-4">
-				<img src="images/iPSK-Logo.svg" width="108" height="57" />
+			<div class="mt-2 mb-4 px-4">
+				<img src="images/ucsc-logo-ipsk.png" width="240px" />
 			</div>
 			<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
-			<h2 class="h6 mt-2 mb-3 font-weight-normal">Please Login</h2>
-			<label for="inputUsername" class="sr-only">Username</label>
-			<input type="text" name="inputUsername" id="inputUsername" class="form-control mt-2 mb-3 shadow" placeholder="Username" required autofocus>
-			<label for="inputPassword" class="sr-only">Password</label>
-			<input type="password" name="inputPassword" id="inputPassword" class="form-control mt-2 mb-3 shadow" placeholder="Password" required>
+			<h2 class="h6 mt-2 mb-3 font-weight-normal">Please login</h2>
+			<label for="inputUsername" class="sr-only">CruzID</label>
+			<input type="text" name="inputUsername" id="inputUsername" class="form-control mt-2 mb-3 shadow" placeholder="CruzID" required autofocus>
+			<label for="inputPassword" class="sr-only">Gold Password</label>
+			<input type="password" name="inputPassword" id="inputPassword" class="form-control mt-2 mb-3 shadow" placeholder="Gold Password" required>
 			<button class="btn btn-lg btn-primary btn-block mt-2 mb-3 shadow" id="loginbtn" type="submit">Sign in</button>
 		</form>
-		<p class="mt-5 mb-0 text-muted">Copyright &copy; 2019 Cisco and/or its affiliates.</p>
 	</div>
   </body>
   <script type="text/javascript" src="scripts/jquery.min.js"></script>

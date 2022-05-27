@@ -42,7 +42,7 @@
 	}
 	
 	if(is_array($_SESSION['authorizedEPGroups'])){
-		$pageData['endpointGroupList'] .= '<select name="associationGroup" id="associationGroup" class="form-control mt-2 mb-3 shadow">';
+		$pageData['endpointGroupList'] .= '<select name="associationGroup" id="associationGroup" class="form-control mt-2 mb-3 shadow d-none">';
 				
 		for($count = 0; $count < $_SESSION['authorizedEPGroups']['count']; $count++) {
 			if(!isset($trackSeenObjects[$_SESSION['authorizedEPGroups'][$count]['endpointGroupId']])){
@@ -105,13 +105,13 @@
 	}
 	
 	if($_SESSION['portalAuthorization']['create'] == true){
-		$pageData['createButton'] = '<div class="col py-1"><button id="createAssoc" class="btn btn-primary shadow" type="button">Create Associations</button></div>';
+		$pageData['createButton'] = '<div class="col py-1"><button id="createAssoc" class="btn btn-primary shadow" type="button">Enroll a device</button></div>';
 	}else{
 		$pageData['createButton'] = '';
 	}
 	
 	if($_SESSION['portalAuthorization']['bulkcreate'] == true){
-		$pageData['bulkButton'] = '<div class="col py-1"><button id="bulkAssoc" class="btn btn-primary shadow" type="button">Bulk Associations</button></div>';
+		$pageData['bulkButton'] = '<div class="col py-1"><button id="bulkAssoc" class="btn btn-primary shadow" type="button">Bulk enroll</button></div>';
 	}else{
 		$pageData['bulkButton'] = '';
 	}
@@ -146,20 +146,19 @@
 		<div class="float-rounded mx-auto shadow-lg p-2 bg-white text-center">
 			<form id="associationform" action="create.php?portalId=$portalId" method="post">
 				<div class="mt-2 mb-4">
-					<img src="images/iPSK-Logo.svg" width="108" height="57" />
+					<img src="images/ucsc-logo-ipsk.png" height="50px" />
 				</div>
 				<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
-				<h2 class="h6 mt-2 mb-3 font-weight-normal">Manage Identity Pre-Shared Keys ("iPSK") Associations</h2>
 				<div class="mb-3 mx-auto shadow p-2 bg-white border border-primary">
 					<div class="container">
 						<div class="row">
 							{$pageData['createButton']}
 							{$pageData['bulkButton']}
 							<div class="col py-1">
-								<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage Associations</button>
+								<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage enrollments</button>
 							</div>
 							<div class="col py-1">
-								<button id="signOut" class="btn btn-primary shadow" type="button">Sign Out</button>
+								<button id="signOut" class="btn btn-primary shadow" type="button">Sign out</button>
 							</div>
 						</div>
 					</div>
@@ -168,9 +167,9 @@
 					<div class="row text-left">
 						<div class="col-sm"></div>
 						<div class="col-10 col-sm-10 mt-2 shadow mx-auto p-2 bg-white border border-primary">
-									<h6>Association type:</h6>
+									<!--<h6>Association type:</h6>-->
 									{$pageData['endpointGroupList']}
-									<div class="container-fluid">
+									<div class="container-fluid d-none">
 										<div class="row">
 											<div class="col-md">
 												<p><small>Maximum access duration:&nbsp;<span id="duration" class="text-danger count">-</span></small></p>
@@ -180,7 +179,7 @@
 											</div>
 										</div>
 									</div>
-									<h6>Wireless SSID:</h6>
+									<h6>Wireless Network:</h6>
 									{$pageData['wirelessSSIDList']}
 						</div>
 						<div class="col-sm"></div>
@@ -190,20 +189,21 @@
 					<div class="row text-left">
 						<div class="col-sm"></div>
 						<div class="col-10 col-sm-10 mt-2 shadow mx-auto p-2 bg-white border border-primary">
-							<h6>Association Details:</h6>
+							<h6>Enrollment Details:</h6>
 							<div class="container">
 								<div class="row">
 									<div class="col-sm">
 										<div class="form-group">
-											<label for="macAddress">Endpoint MAC Address</label>
+											<label for="macAddress">Device MAC Address</label>
 											<input type="text" class="form-control mt-2 mb-3 shadow user-input form-validation" validation-state="required" validation-minimum-length="17" validation-maximum-length="17" value="" id="macAddress" name="macAddress" maxlength="17" placeholder="XX:XX:XX:XX:XX:XX">
+											<label for="macAddress"><a href="https://its.ucsc.edu/resnet/find-mac-address.html" target="_blank">How do I find my device's MAC address?</a></label>
 											<div class="invalid-feedback">Please enter a valid MAC Address</div>
 										</div>
 									</div>
 									<div class="col-sm">
 										<div class="form-group">
-											<label for="endpointDescription">Endpoint Description</label>
-											<input type="text" class="form-control mt-2 mb-3 user-input shadow" value="" name="endpointDescription" placeholder="Device Description">
+											<label for="endpointDescription">Device Description</label>
+											<input type="text" class="form-control mt-2 mb-3 user-input shadow" value="" name="endpointDescription" placeholder="Nintendo Switch Lite">
 										</div>
 									</div>
 								</div>
@@ -226,7 +226,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group text-center">
+							<div class="mt-4 form-group text-center">
 								<button class="btn btn-primary shadow" id="submitbtn" type="button">Submit</button>
 							</div>
 						</div>
@@ -236,7 +236,15 @@
 			</form>
 		</div>
 		<div class="m-0 mx-auto p-2 bg-white text-center">
-			<p>Copyright &copy; 2019 Cisco and/or its affiliates.</p>
+			<p>For assistance, email resnet@ucsc.edu, call (831) 459-4638, or visit <a href="https://its.ucsc.edu/resnet" target="_blank">UCSC Residential Network Services</a>.</p>
+			<div class="row justify-content-center pb-2">
+			    <div class="col-5 col-md-2 border-right">
+			        <a href="https://its.ucsc.edu/resnet/enroll-device.html" target="_blank">Instructions</a>
+			    </div>
+			    <div class="col-6 col-md-3">
+			        <a href="https://its.ucsc.edu/policies/resnet-rup.html" target="_blank">Responsible Use Policy</a>
+			    </div>
+			</div>
 		</div>
 		
 	</div>
