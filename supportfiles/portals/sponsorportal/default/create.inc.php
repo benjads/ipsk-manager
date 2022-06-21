@@ -114,14 +114,14 @@
 						 *sendEmail($sanitizedInput['emailAddress'],"iPSK Wi-Fi Credentials","You have been successfully setup to connect to the Wi-Fi Network, please use the following Passcode:".$randomPassword."\n\nThank you!",$smtpSettings);
 						 */
 					}
-					$pageData['createComplete'] .= "<h3>The Endpoint Association has successfully completed.</h3><h6>The uniquely generated Pre-Shared Key for the end point is:</h6>";
+					$pageData['createComplete'] .= "<h3>The enrollment has successfully completed.</h3><h6>The uniquely generated password for the device is:</h6>";
 				}else{
 					//LOG::Entry
 					$logData = $ipskISEDB->generateLogData(Array("sanitizedInput"=>$sanitizedInput));
 					$logMessage = "REQUEST:FAILURE[unable_to_create_endpoint_association];ACTION:SPONSORCREATE;MAC:".$sanitizedInput['macAddress'].";REMOTE-IP:".$_SERVER['REMOTE_ADDR'].";USERNAME:".$_SESSION['logonUsername'].";SID:".$_SESSION['logonSID'].";";
 					$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
 					
-					$pageData['createComplete'] .= "<h3>The Endpoint Association has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint association)</h5>";
+					$pageData['createComplete'] .= "<h3>The enrollment has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint association)</h5>";
 					$randomPassword = "";
 					$pageData['hidePskFlag'] = " d-none";
 				}
@@ -131,24 +131,24 @@
 				$logMessage = "REQUEST:FAILURE[unable_to_create_endpoint];ACTION:SPONSORCREATE;MAC:".$sanitizedInput['macAddress'].";REMOTE-IP:".$_SERVER['REMOTE_ADDR'].";USERNAME:".$_SESSION['logonUsername'].";SID:".$_SESSION['logonSID'].";";
 				$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
 				
-				$pageData['createComplete'] .= "<h3>The Endpoint Association has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint)</h5>";
+				$pageData['createComplete'] .= "<h3>The enrollment has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint)</h5>";
 				$randomPassword = "";
 				$pageData['hidePskFlag'] = " d-none";
 			}
 		}
 	}
-	
-	if($_SESSION['portalAuthorization']['create'] == true){
-		$pageData['createButton'] = '<button id="createAssoc" class="btn btn-primary shadow" type="button">Create Associations</button>';
-	}else{
-		$pageData['createButton'] = '';
-	}
-	
-	if($_SESSION['portalAuthorization']['bulkcreate'] == true){
-		$pageData['bulkButton'] = '<button id="bulkAssoc" class="btn btn-primary shadow" type="button">Bulk Associations</button>';
-	}else{
-		$pageData['bulkButton'] = '';
-	}
+
+    if($_SESSION['portalAuthorization']['create'] == true){
+        $pageData['createButton'] = '<div class="col py-1"><button id="createAssoc" class="btn btn-primary shadow" type="button">Enroll a device</button></div>';
+    }else{
+        $pageData['createButton'] = '';
+    }
+
+    if($_SESSION['portalAuthorization']['bulkcreate'] == true){
+        $pageData['bulkButton'] = '<div class="col py-1"><button id="bulkAssoc" class="btn btn-primary shadow" type="button">Bulk enroll</button></div>';
+    }else{
+    $pageData['bulkButton'] = '';
+    }
 
 	print <<< HTML
 <html lang="en">
@@ -172,23 +172,20 @@
 	<div class="container">
 		<div class="float-rounded mx-auto shadow-lg p-2 bg-white text-center">
 				<div class="mt-2 mb-4">
-					<img src="images/iPSK-Logo.svg" width="108" height="57" />
+					<img src="images/ucsc-logo-ipsk.png" height="50px" />
 				</div>
 				<h1 class="h3 mt-2 mb-4 font-weight-normal">{$portalSettings['portalName']}</h1>
-				<h2 class="h6 mt-2 mb-3 font-weight-normal">Manage Identity Pre-Shared Keys ("iPSK") Associations</h2>
 				<div class="mb-3 mx-auto shadow p-2 bg-white border border-primary">
-					<div class="row">
-						<div class="col-3">				
-						{$pageData['createButton']}
-						</div>
-						<div class="col-3">				
-						{$pageData['bulkButton']}
-						</div>
-						<div class="col-3">				
-							<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage Associations</button>
-						</div>
-						<div class="col-3">				
-							<button id="signOut" class="btn btn-primary shadow" type="button">Sign Out</button>
+					<div class="container">
+						<div class="row">
+							{$pageData['createButton']}
+							{$pageData['bulkButton']}
+							<div class="col py-1">
+								<button id="manageAssoc" class="btn btn-primary shadow" type="button">Manage enrollments</button>
+							</div>
+							<div class="col py-1">
+								<button id="signOut" class="btn btn-primary shadow" type="button">Sign out</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -203,14 +200,14 @@
 							<div class="col{$pageData['hidePskFlag']}">
 								<div class="input-group input-group-sm mb-3 shadow copied-popover" data-animation="true" data-container="body" data-trigger="manual" data-toggle="popover" data-placement="top" data-content="Pre Shared Key has been Copied!">
 									<div class="input-group-prepend">
-										<span class="input-group-text font-weight-bold shadow" id="basic-addon1">Pre-Shared Key</span>
+										<span class="input-group-text font-weight-bold shadow" id="basic-addon1">Password</span>
 									</div>
 									<input type="text" id="presharedKey" class="form-control shadow" process-value="$randomPassword" value="$randomPassword" aria-label="password" aria-describedby="basic-addon1" data-lpignore="true" readonly>
 									<div class="input-group-append">
 										<span class="input-group-text font-weight-bold shadow" id="basic-addon1"><a id="copyPassword" href="#" data-clipboard-target="#presharedKey"><span id="passwordfeather" data-feather="copy"></span></a></span>
 									</div>
 								</div>
-								Click on the copy button to copy the Pre Shared Key to your Clipboard.
+								Click on the copy button to copy the password to your clipboard.
 							</div>
 						</div>
 						<div class="row">
@@ -226,7 +223,15 @@
 			</form>
 		</div>
 		<div class="m-0 mx-auto p-2 bg-white text-center">
-			<p>Copyright &copy; 2019 Cisco and/or its affiliates.</p>
+			<p>For assistance, email resnet@ucsc.edu, call (831) 459-4638, or visit <a href="https://its.ucsc.edu/resnet" target="_blank">UCSC Residential Network Services</a>.</p>
+			<div class="row justify-content-center pb-2">
+			    <div class="col-5 col-md-2 border-right">
+			        <a href="https://its.ucsc.edu/resnet/enroll-device.html" target="_blank">Instructions</a>
+			    </div>
+			    <div class="col-6 col-md-3">
+			        <a href="https://its.ucsc.edu/policies/resnet-rup.html" target="_blank">Responsible Use Policy</a>
+			    </div>
+			</div>
 		</div>
 		
 	</div>
