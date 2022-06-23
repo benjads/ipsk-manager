@@ -239,7 +239,7 @@
 			<p>For assistance, email resnet@ucsc.edu, call (831) 459-4638, or visit <a href="https://its.ucsc.edu/resnet" target="_blank">UCSC Residential Network Services</a>.</p>
 			<div class="row justify-content-center pb-2">
 			    <div class="col-5 col-md-2 border-right">
-			        <a href="https://its.ucsc.edu/resnet/enroll-device.html" target="_blank">Instructions</a>
+			        <a href="https://its.ucsc.edu/resnet/get-connected/enroll-device.html" target="_blank">Instructions</a>
 			    </div>
 			    <div class="col-6 col-md-3">
 			        <a href="https://its.ucsc.edu/policies/resnet-rup.html" target="_blank">Responsible Use Policy</a>
