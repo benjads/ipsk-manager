@@ -1062,6 +1062,23 @@
 			}
 		}
 
+        function getEndpointByMacAddress($macAddress){
+            $query = "SELECT authorizationTemplates.termLengthSeconds, endpointAssociations.id, endpointAssociations.epGroupId, endpointAssociations.macAddress, endpoints.fullName, endpoints.id as endpointId, endpoints.description, endpoints.emailAddress, endpoints.pskValue, endpoints.createdBy FROM endpointAssociations INNER JOIN endpointGroups  ON endpointAssociations.epGroupId = endpointGroups.id INNER JOIN authorizationTemplates  ON authorizationTemplates.id = endpointGroups.authzTemplateId INNER JOIN endpoints  ON endpointAssociations.endpointId = endpoints.id WHERE endpointAssociations.macAddress = '$macAddress' LIMIT 1";
+
+            $queryResult = $this->dbConnection->query($query);
+
+            if($queryResult){
+                if($queryResult->num_rows > 0){
+                    $row = $queryResult->fetch_assoc();
+                    return $row;
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+
 		function getEndpointsByAuthZPolicy($id){
 			$query = "SELECT endpoints.id, endpoints.macAddress, endpointGroups.authzTemplateId FROM `endpoints` INNER JOIN endpointAssociations ON endpoints.id = endpointAssociations.endpointId INNER JOIN endpointGroups ON endpointAssociations.epGroupId = endpointGroups.id WHERE endpointGroups.authzTemplateId = '$id'";
 			
@@ -2185,7 +2202,6 @@
 		}
 		
 		function addUserCacheEntry($sid, $userPrincipalName, $samAccountName, $userDn, $systemSid){
-			
 			$query = sprintf("INSERT INTO `userSidCache` (`sid`, `userPrincipalName`, `samAccountName`, `userDn`,`createdBy`) VALUES('%s','%s','%s','%s','%s')", $this->dbConnection->real_escape_string($sid), $this->dbConnection->real_escape_string($userPrincipalName), $this->dbConnection->real_escape_string($samAccountName), $this->dbConnection->real_escape_string($userDn), $systemSid);
 			
 			$queryResult = $this->dbConnection->query($query);

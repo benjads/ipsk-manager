@@ -92,7 +92,12 @@
                 $emailAddress = $_SESSION['emailAddress'];
             }
 
-			$endpointId = $ipskISEDB->addEndpoint($sanitizedInput['macAddress'], $fullName, $sanitizedInput['endpointDescription'], $emailAddress, $randomPSK, $duration, $_SESSION['logonSID']);
+            $endpointId = false;
+            $duplicate = $ipskISEDB->getEndpointByMacAddress($sanitizedInput['macAddress']);
+            if (!$duplicate) {
+                $endpointId = $ipskISEDB->addEndpoint($sanitizedInput['macAddress'], $fullName, $sanitizedInput['endpointDescription'], $emailAddress, $randomPSK, $duration, $_SESSION['logonSID']);
+            }
+
 			if($endpointId){
 				//LOG::Entry
 				$logData = $ipskISEDB->generateLogData(Array("sanitizedInput"=>$sanitizedInput));
@@ -130,8 +135,12 @@
 				$logData = $ipskISEDB->generateLogData(Array("sanitizedInput"=>$sanitizedInput));
 				$logMessage = "REQUEST:FAILURE[unable_to_create_endpoint];ACTION:SPONSORCREATE;MAC:".$sanitizedInput['macAddress'].";REMOTE-IP:".$_SERVER['REMOTE_ADDR'].";USERNAME:".$_SESSION['logonUsername'].";SID:".$_SESSION['logonSID'].";";
 				$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-				
-				$pageData['createComplete'] .= "<h3>The enrollment has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint)</h5>";
+
+                if ($duplicate) {
+                    $pageData['createComplete'] .= "<h3>The device has already been enrolled. If this is a mistake, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: duplicate enrollment)</h5>";
+                } else {
+                    $pageData['createComplete'] .= "<h3>The enrollment has failed, please contact a support technician for assistance.</h3><h5 class=\"text-danger\">(Error message: Unable to create endpoint)</h5>";
+                }
 				$randomPassword = "";
 				$pageData['hidePskFlag'] = " d-none";
 			}
