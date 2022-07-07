@@ -64,7 +64,7 @@
 					$groupType = "External";
 				}
 				
-				if($row['permissions'] == '1'){
+				if($row['permissions'] >= '1'){
 					$adminPortal = "check-square";
 				}else{
 					$adminPortal = "square";

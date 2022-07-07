@@ -32,11 +32,21 @@
 			$groupDn = "";
 		}
 		
-		if($internalGroup['permissions'] == 1){
-			$internalGroup['permissions'] = " checked";
-		}else{
-			$internalGroup['permissions'] = "";
-		}
+		$permissionName;
+        switch ($internalGroup['permissions']) {
+            case 0:
+                $permissionName = 'No Access';
+                break;
+            case 1:
+                $permissionName = 'Endpoint Read-Only Admin';
+                break;
+            case 2:
+                $permissionName = 'Endpoint Admin';
+                break;
+            case 3:
+                $permissionName = 'Full/Config Admin';
+                break;
+        }
 
 		$internalGroup['createdBy'] = $ipskISEDB->getUserPrincipalNameFromCache($internalGroup['createdBy']);
 
@@ -63,14 +73,9 @@ $htmlbody = <<<HTML
 			<input type="text" class="form-control shadow" id="description" value="{$internalGroup['description']}" readonly>
 		</div>
 		$groupDn
-		<label class="font-weight-bold">Permissions:</label>
-		<div class="form-row">
-			<div class="col">
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input checkbox-update" id="adminAccess" disabled{$internalGroup['permissions']}>
-					<label class="custom-control-label" for="adminAccess">Admin Portal Access</label>
-				</div>
-			</div>
+		<label class="font-weight-bold" for="permission">Admin Permissions:</label>
+		<div class="form-group input-group-sm font-weight-bold">
+			<input type="text" class="form-control shadow" id="permission" value="$permissionName" readonly>
 		</div>
 		<label class="font-weight-bold" for="createdBy">Date Created:</label>
 		<div class="form-group input-group-sm font-weight-bold">
