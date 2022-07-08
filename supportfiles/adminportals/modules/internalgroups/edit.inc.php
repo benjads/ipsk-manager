@@ -36,12 +36,11 @@
 			$groupType = '<option value="0">Internal</option>';
 			$groupType .= '<option value="1" selected>External</option>';
 		}
-		
-		if($internalGroup['permissions'] == 1){
-			$internalGroup['permissionsCheck'] = " checked";
-		}else{
-			$internalGroup['permissionsCheck'] = "";
-		}
+
+        $permissions = '<option value="0"' . ($internalGroup['permissions'] == 0 ? ' selected' : '') . '>No Access</option>';
+        $permissions .= '<option value="1"' . ($internalGroup['permissions'] == 1 ? ' selected' : '') . '>Endpoint Read-Only Admin</option>';
+        $permissions .= '<option value="2"' . ($internalGroup['permissions'] == 2 ? ' selected' : '') . '>Endpoint Admin</option>';
+        $permissions .= '<option value="3"' . ($internalGroup['permissions'] == 3 ? ' selected' : '') . '>Full/Config Admin</option>';
 
 $htmlbody = <<<HTML
 <!-- Modal -->
@@ -80,14 +79,12 @@ $htmlbody = <<<HTML
 				</div>
 			</div>
 		</div>
-		<div class="form-row">
-			<div class="col">
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input checkbox-update" name="permission" base-value="1" value="{$internalGroup['permissions']}" id="permission"{$internalGroup['permissionsCheck']}>
-					<label class="custom-control-label" for="permission">Admin Portal Access</label>
-			</div>
+	  <label class="font-weight-bold" for="permission">Admin Permissions:</label>
+		<div class="form-group input-group-sm font-weight-bold">
+			<select id="permission" class="form-control mt-2 mb-3 shadow">
+				$permissions
+			</select>
 		</div>
-	  </div>
       <div class="modal-footer">
 		<input type="hidden" id="id" name="id" value="$id">
 		<a id="update" href="#" module="internalgroups" sub-module="update" role="button" class="btn btn-primary shadow" data-dismiss="modal">Update</a>

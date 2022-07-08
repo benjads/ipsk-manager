@@ -74,26 +74,36 @@
 				$logData = $ipskISEDB->generateLogData(Array("authorizedGroups"=>$authorizedGroups), Array("sanitizedInput"=>$sanitizedInput));
 				$logMessage = "REQUEST:SUCCESS;ACTION:ADMINAUTHN;USERNAME:".$sanitizedInput["inputUsername"].";AUTHDIRECTORY:".$sanitizedInput['authDirectory'].";";
 				$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-				
+
 				if($authorizedGroups['count'] > 0){
+                    $loginSuccess = false;
 					for($count = 0; $count < $authorizedGroups['count']; $count++){
 						for($userCount = 0; $userCount < $_SESSION['memberOf']['count']; $userCount++){
-							if($authorizedGroups[$count] == $_SESSION['memberOf'][$userCount]){
-								$_SESSION['authorizationGroup'] = $authorizedGroups[$count];
+							if($authorizedGroups[$count]['groupDn'] == $_SESSION['memberOf'][$userCount]){
+								$_SESSION['authorizationGroup'] = $authorizedGroups[$count]['groupDn'];
 								$_SESSION['authorizationGranted'] = true;
 								$_SESSION['authorizationTimestamp'] = time();
-								
-								//LOG::Entry
-								$logData = $ipskISEDB->generateLogData(Array("authorizedGroups"=>$authorizedGroups), Array("sanitizedInput"=>$sanitizedInput));
-								$logMessage = "REQUEST:SUCCESS;ACTION:ADMINAUTHZ;USERNAME:".$sanitizedInput["inputUsername"].";AUTHDIRECTORY:".$sanitizedInput['authDirectory'].";";
-								$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-								
-								$ipskISEDB->addUserCacheEntry($_SESSION['logonSID'],$_SESSION['userPrincipalName'],$_SESSION['sAMAccountName'],$_SESSION['logonDN'], $systemSID);
-								header("Location: /adminportal.php");
-								die();
+
+                                $groupPerm = $authorizedGroups[$count]['permissions'];
+                                $_SESSION['authorizationPermissions'] = isset($_SESSION['authorizationPermissions'])
+                                    ? max($_SESSION['authorizationPermissions'], $groupPerm)
+                                    : max(0, $groupPerm);
+
+                                $loginSuccess = true;
 							}
 						}
 					}
+
+                    if($loginSuccess) {
+                        //LOG::Entry
+                        $logData = $ipskISEDB->generateLogData(Array("authorizedGroups"=>$authorizedGroups), Array("sanitizedInput"=>$sanitizedInput));
+                        $logMessage = "REQUEST:SUCCESS;ACTION:ADMINAUTHZ;USERNAME:".$sanitizedInput["inputUsername"].";AUTHDIRECTORY:".$sanitizedInput['authDirectory'].";";
+                        $ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
+
+                        $ipskISEDB->addUserCacheEntry($_SESSION['logonSID'],$_SESSION['userPrincipalName'],$_SESSION['sAMAccountName'],$_SESSION['logonDN'], $systemSID);
+                        header("Location: /adminportal.php");
+                        die();
+                    }
 					
 					//LOG::Entry
 					$logData = $ipskISEDB->generateLogData(Array("authorizedGroups"=>$authorizedGroups), Array("sanitizedInput"=>$sanitizedInput));
@@ -137,26 +147,37 @@
 							$logData = $ipskISEDB->generateLogData(Array("authorizedGroups"=>$authorizedGroups), Array("ldapCreds"=>$ldapCreds), Array("sanitizedInput"=>$sanitizedInput));
 							$logMessage = "REQUEST:SUCCESS;ACTION:ADMINAUTHN;USERNAME:".$sanitizedInput["inputUsername"].";AUTHDIRECTORY:".$sanitizedInput['authDirectory'].";";
 							$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-							
+
 							if($authorizedGroups['count'] > 0){
+                                $loginSuccess = false;
 								for($count = 0; $count < $authorizedGroups['count']; $count++){
 									for($userCount = 0; $userCount < $_SESSION['memberOf']['count']; $userCount++){
-										if($authorizedGroups[$count] == $_SESSION['memberOf'][$userCount]){
-											$_SESSION['authorizationGroup'] = $authorizedGroups[$count];
+										if($authorizedGroups[$count]['groupDn'] == $_SESSION['memberOf'][$userCount]){
+											$_SESSION['authorizationGroup'] = $authorizedGroups[$count]['groupDn'];
 											$_SESSION['authorizationGranted'] = true;
 											$_SESSION['authorizationTimestamp'] = time();
-											
-											//LOG::Entry
-											$logData = $ipskISEDB->generateLogData(Array("authorizedGroups"=>$authorizedGroups), Array("ldapCreds"=>$ldapCreds), Array("sanitizedInput"=>$sanitizedInput));
-											$logMessage = "REQUEST:SUCCESS;ACTION:ADMINAUTHZ;USERNAME:".$sanitizedInput["inputUsername"].";AUTHDIRECTORY:".$sanitizedInput['authDirectory'].";";
-											$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-											
-											$ipskISEDB->addUserCacheEntry($_SESSION['logonSID'],$_SESSION['userPrincipalName'],$_SESSION['sAMAccountName'],$_SESSION['logonDN'], $systemSID);
-											header("Location: /adminportal.php");
-											die();
+
+                                            $groupPerm = $authorizedGroups[$count]['permissions'];
+                                            $_SESSION['authorizationPermissions'] = isset($_SESSION['authorizationPermissions'])
+                                                ? max($_SESSION['authorizationPermissions'], $groupPerm)
+                                                : max(0, $groupPerm);
+
+                                            $loginSuccess = true;
 										}
 									}
 								}
+
+                                if($loginSuccess) {
+                                    //LOG::Entry
+                                    $logData = $ipskISEDB->generateLogData(Array("authorizedGroups"=>$authorizedGroups), Array("ldapCreds"=>$ldapCreds), Array("sanitizedInput"=>$sanitizedInput));
+                                    $logMessage = "REQUEST:SUCCESS;ACTION:ADMINAUTHZ;USERNAME:".$sanitizedInput["inputUsername"].";AUTHDIRECTORY:".$sanitizedInput['authDirectory'].";";
+                                    $ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
+
+                                    $ipskISEDB->addUserCacheEntry($_SESSION['logonSID'],$_SESSION['userPrincipalName'],$_SESSION['sAMAccountName'],$_SESSION['logonDN'], $systemSID);
+                                    header("Location: /adminportal.php");
+                                    die();
+                                }
+
 								//LOG::Entry
 								$logData = $ipskISEDB->generateLogData(Array("authorizedGroups"=>$authorizedGroups), Array("ldapCreds"=>$ldapCreds), Array("sanitizedInput"=>$sanitizedInput));
 								$logMessage = "REQUEST:FAILURE{1}[user_authz_failure];ACTION:ADMINAUTHZ;USERNAME:".$sanitizedInput["inputUsername"].";AUTHDIRECTORY:".$sanitizedInput['authDirectory'].";";

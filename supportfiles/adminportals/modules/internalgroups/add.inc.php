@@ -1,5 +1,5 @@
 <?php
-	
+
 /**
  *@license
  *
@@ -17,9 +17,9 @@
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-	
 
-	
+
+
 $htmlbody = <<<HTML
 <!-- Modal -->
 <div class="modal fade" id="addInternalGroup" tabindex="-1" role="dialog" aria-labelledby="addInternalGroupModal" aria-hidden="true">
@@ -57,13 +57,14 @@ $htmlbody = <<<HTML
 				</div>
 			</div>
 		</div>
-		<div class="form-row">
-			<div class="col">
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input checkbox-update" name="permission" base-value="1" value="0" id="permission">
-					<label class="custom-control-label" for="permission">Admin Portal Access</label>
-				</div>
-			</div>
+		<label class="font-weight-bold" for="permission">Admin Permissions:</label>
+		<div class="form-group input-group-sm font-weight-bold">
+			<select id="permission" class="form-control mt-2 mb-3 shadow">
+				<option value="0">No Access</option>
+				<option value="1">Endpoint Read-Only Admin</option>
+				<option value="2">Endpoint Admin</option>
+				<option value="3">Full/Config Admin</option>
+			</select>
 		</div>
 	  </div>
       <div class="modal-footer">
