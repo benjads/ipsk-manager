@@ -367,14 +367,15 @@
 		function getPortalAdminGroups(){
 			$count = 0;
 			
-			$query = "SELECT `groupDn` FROM `internalGroups` WHERE `permissions` = '1'";
+			$query = "SELECT `groupDn`, `permissions` FROM `internalGroups` WHERE `permissions` >= '1'";
 			
 			$queryResult = $this->dbConnection->query($query);
 			
 			if($queryResult){
 				if($queryResult->num_rows > 0){
 					while($row = $queryResult->fetch_assoc()){
-						$result[$count] = $row['groupDn'];
+						$result[$count]['groupDn'] = $row['groupDn'];
+                        $result[$count]['permissions'] = $row['permissions'];
 						$count++;			
 					}
 					
@@ -2183,7 +2184,6 @@
 		}
 		
 		function addUserCacheEntry($sid, $userPrincipalName, $samAccountName, $userDn, $systemSid){
-			
 			$query = sprintf("INSERT INTO `userSidCache` (`sid`, `userPrincipalName`, `samAccountName`, `userDn`,`createdBy`) VALUES('%s','%s','%s','%s','%s')", $this->dbConnection->real_escape_string($sid), $this->dbConnection->real_escape_string($userPrincipalName), $this->dbConnection->real_escape_string($samAccountName), $this->dbConnection->real_escape_string($userDn), $systemSid);
 			
 			$queryResult = $this->dbConnection->query($query);

@@ -148,6 +148,11 @@ HTML;
 					$adminMenu = json_decode($adminMenuSetting,TRUE);
 					
 					for($menuRow = 0; $menuRow < $adminMenu['menuItems']; $menuRow++) {
+
+                        $endpointAdminModules = Array("menuDashboard", "menuAbout", "manageEndpoints");
+                        if($_SESSION['authorizationPermissions'] < 3 && !in_array($adminMenu[$menuRow]['id'], $endpointAdminModules)) {
+                            continue;
+                        }
 						
 						print "<li class=\"nav-item\">\n";
 							if($menuRow == 0){

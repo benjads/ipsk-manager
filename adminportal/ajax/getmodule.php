@@ -59,18 +59,39 @@
 		}
 		
 		$sanitizedInput = sanitizeGetModuleInput($subModuleRegEx);
+        $endpointAdminModules = Array("dashboard", "about", "endpoints", "logging");
 
 		if($sanitizedInput['module'] != "" && $sanitizedInput['sub-module'] != ""){
 								
 			$moduleFileName = "../../supportfiles/adminportals/modules/".$sanitizedInput['module']."/".$sanitizedInput['sub-module'].".inc.php";
 			
 			if(file_exists($moduleFileName)){
-				//LOG::Entry
-				$logData = $ipskISEDB->generateLogData(Array("moduleFileName"=>$moduleFileName), Array("sanitizedInput"=>$sanitizedInput), Array("_POST"=>$_POST));
-				$logMessage = "REQUEST:SUCCESS;GET-MODULE:".$sanitizedInput['module'].";SUB-MODULE:".$sanitizedInput['sub-module'].";";
-				$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
-				
-				include($moduleFileName);
+                $readOnlyEndpointSubmodules = Array("endpoints", "view");
+
+                if($_SESSION['authorizationPermissions'] < 3 && !in_array($sanitizedInput['module'], $endpointAdminModules, true)) {
+                    $logData = $ipskISEDB->generateLogData(Array("moduleFileName"=>$moduleFileName), Array("sanitizedInput"=>$sanitizedInput), Array("_POST"=>$_POST));
+                    $logMessage = "REQUEST:FAILURE[invalid_perms];GET-MODULE:".$sanitizedInput['module'].";SUB-MODULE:".$sanitizedInput['sub-module'].";";
+                    $ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
+
+                    header('HTTP/1.0 404 Not Found', true, 404);
+                    die();
+                }
+
+                if($_SESSION['authorizationPermissions'] < 2 && $sanitizedInput['module'] == "endpoints" && !in_array($sanitizedInput['sub-module'], $readOnlyEndpointSubmodules, true)) {
+                    $logData = $ipskISEDB->generateLogData(Array("moduleFileName"=>$moduleFileName), Array("sanitizedInput"=>$sanitizedInput), Array("_POST"=>$_POST));
+                    $logMessage = "REQUEST:FAILURE[read_only_perms];GET-MODULE:".$sanitizedInput['module'].";SUB-MODULE:".$sanitizedInput['sub-module'].";";
+                    $ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
+
+                    header('HTTP/1.0 404 Not Found', true, 404);
+                    die();
+                }
+
+                //LOG::Entry
+                $logData = $ipskISEDB->generateLogData(Array("moduleFileName"=>$moduleFileName), Array("sanitizedInput"=>$sanitizedInput), Array("_POST"=>$_POST));
+                $logMessage = "REQUEST:SUCCESS;GET-MODULE:".$sanitizedInput['module'].";SUB-MODULE:".$sanitizedInput['sub-module'].";";
+                $ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
+
+                include($moduleFileName);
 			}else{
 				//LOG::Entry
 				$logData = $ipskISEDB->generateLogData(Array("moduleFileName"=>$moduleFileName), Array("sanitizedInput"=>$sanitizedInput), Array("_POST"=>$_POST));
@@ -92,7 +113,16 @@
 			$moduleFileName = "../../supportfiles/adminportals/modules/".$sanitizedInput['module']."/".$sanitizedInput['module'].".inc.php";
 			
 			if(file_exists($moduleFileName)){
-				//LOG::Entry
+                if($_SESSION['authorizationPermissions'] < 3 && !in_array($sanitizedInput['module'], $endpointAdminModules, true)) {
+                    $logData = $ipskISEDB->generateLogData(Array("moduleFileName"=>$moduleFileName), Array("sanitizedInput"=>$sanitizedInput), Array("_POST"=>$_POST));
+                    $logMessage = "REQUEST:FAILURE[invalid_perms];GET-MODULE:".$sanitizedInput['module'].";SUB-MODULE:".$sanitizedInput['sub-module'].";";
+                    $ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
+
+                    header('HTTP/1.0 404 Not Found', true, 404);
+                    die();
+                }
+
+                //LOG::Entry
 				$logData = $ipskISEDB->generateLogData(Array("moduleFileName"=>$moduleFileName), Array("sanitizedInput"=>$sanitizedInput), Array("_POST"=>$_POST));
 				$logMessage = "REQUEST:SUCCESS;GET-MODULE:".$sanitizedInput['module'].";";
 				$ipskISEDB->addLogEntry($logMessage, __FILE__, __FUNCTION__, __CLASS__, __METHOD__, __LINE__, $logData);
